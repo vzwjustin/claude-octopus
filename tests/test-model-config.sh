@@ -86,7 +86,7 @@ result=$(get_agent_model "codex")
 assert_equals "gpt-5.1-codex-max" "$result" "Codex default model"
 
 result=$(get_agent_model "gemini")
-assert_equals "gemini-3-pro-preview" "$result" "Gemini default model"
+assert_equals "gemini-3.1-pro-preview" "$result" "Gemini default model"
 
 result=$(get_agent_model "claude")
 assert_equals "claude-sonnet-4.6" "$result" "Claude default model"

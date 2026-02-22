@@ -210,8 +210,8 @@ Providers:
 ## Cost Awareness
 
 Always be mindful that external CLIs cost money:
-- 🔴 Codex: ~$0.01-0.15 per query depending on model (GPT-5.3-Codex $1.75/$14 MTok, Spark 15x faster, Mini ~$0.30/$1.25 MTok)
-- 🟡 Gemini: ~$0.01-0.03 per query (Gemini Pro)
+- 🔴 Codex: ~$0.01-0.15 per query depending on model (GPT-5.3-Codex $1.75/$14 MTok, Spark 15x faster, Mini ~$0.30/$1.25 MTok; reasoning effort: low/medium/high/xhigh)
+- 🟡 Gemini: ~$0.01-0.05 per query (Gemini 3.1 Pro $2.00/$12.00 MTok, Flash $0.25/$1.00 MTok; thinking levels: low/medium/high)
 - 🔵 Claude (Sonnet 4.6): Included with Claude Code subscription
 - 🔵 Claude (Opus 4.6): $5/$25 per MTok input/output when using `claude-opus` agent type
 - 🔵 Claude (Opus 4.6 Fast): **$30/$150 per MTok** (6x standard) - lower latency, extra-usage billing (v2.1.36+)

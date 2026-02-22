@@ -42,10 +42,19 @@ Use Gemini for:
 - Multi-source documentation synthesis
 - Strategic technology decisions
 
+### Models
+
+| Model | Context | Thinking Levels | Cost |
+|-------|---------|-----------------|------|
+| `gemini-3.1-pro-preview` | 1M | low, medium, high | $2.00/$12.00 per MTok |
+| `gemini-3-pro-preview` | 1M | low, high | $2.00/$12.00 per MTok |
+| `gemini-3-flash-preview` | 1M | - | $0.25/$1.00 per MTok |
+
 ### Cost Considerations
 
-- Gemini uses Gemini Pro or Flash models
-- Estimated cost: ~$0.01-0.03 per query
+- Default model: `gemini-3.1-pro-preview` (premium reasoning, 1M context)
+- Flash model: `gemini-3-flash-preview` (fast, low-cost)
+- Estimated cost: ~$0.01-0.05 per query depending on model
 - Flash mode is cheaper for simple queries
 - Uses your personal GEMINI_API_KEY
 

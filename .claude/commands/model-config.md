@@ -5,7 +5,7 @@ version: 2.0.0
 category: configuration
 tags: [config, models, providers, codex, gemini, spark, routing]
 created: 2025-01-21
-updated: 2026-02-13
+updated: 2026-02-22
 ---
 
 # Model Configuration
@@ -31,7 +31,7 @@ Configure which AI models are used by Claude Octopus workflows. This allows you 
 /octo:model-config codex gpt-5.3-codex-spark
 
 # Set gemini model (persistent)
-/octo:model-config gemini gemini-3-pro-preview
+/octo:model-config gemini gemini-3.1-pro-preview
 
 # Set session-only override (doesn't modify config file)
 /octo:model-config codex gpt-5.2 --session
@@ -72,7 +72,7 @@ Models are selected using a 5-tier precedence system:
    - Spark: `gpt-5.3-codex-spark`
    - Reasoning: `o3`
    - Large context: `gpt-4.1`
-   - Gemini: `gemini-3-pro-preview`
+   - Gemini: `gemini-3.1-pro-preview`
 
 ## Supported Models
 
@@ -118,10 +118,11 @@ Requires `OPENROUTER_API_KEY` to be set. These are automatically selected when O
 
 ### Gemini (Google)
 
-| Model | Best For | Cost |
-|-------|----------|------|
-| `gemini-3-pro-preview` | Premium quality research | $2.50/$10.00 per MTok |
-| `gemini-3-flash-preview` | Fast, low-cost tasks | $0.25/$1.00 per MTok |
+| Model | Context | Best For | Cost |
+|-------|---------|----------|------|
+| `gemini-3.1-pro-preview` | **1M** | Premium reasoning, agentic tasks (thinking: low/medium/high) | $2.00/$12.00 per MTok |
+| `gemini-3-pro-preview` | **1M** | Standard quality research | $2.00/$12.00 per MTok |
+| `gemini-3-flash-preview` | 1M | Fast, low-cost tasks | $0.25/$1.00 per MTok |
 
 ## Phase Routing
 
@@ -181,6 +182,14 @@ export OCTOPUS_CODEX_MODEL="gpt-5.3-codex-spark"
 /octo:embrace build a simple CRUD API
 ```
 
+### Gemini 3.1 Pro with Thinking Levels
+```bash
+# Gemini 3.1 Pro supports thinking levels: low, medium (new), high
+# The thinking_level parameter controls reasoning depth
+# Default is 'high' — use 'medium' for cost/speed balance
+/octo:model-config gemini gemini-3.1-pro-preview
+```
+
 ### Deep Security Audit
 ```bash
 # Use premium models + reasoning for security
@@ -213,8 +222,8 @@ Location: `~/.claude-octopus/config/providers.json`
       "large_context_model": "gpt-4.1"
     },
     "gemini": {
-      "model": "gemini-3-pro-preview",
-      "fallback": "gemini-3-flash-preview"
+      "model": "gemini-3.1-pro-preview",
+      "fallback": "gemini-3-pro-preview"
     }
   },
   "phase_routing": {
@@ -244,6 +253,14 @@ Location: `~/.claude-octopus/config/providers.json`
 | **Best for** | Complex tasks, security, architecture | Reviews, iteration, quick tasks |
 
 **Rule of thumb:** Use Spark when speed matters more than depth. Use full Codex when accuracy and context window matter.
+
+## Reasoning / Thinking Modes
+
+### Codex (GPT-5.3-Codex)
+GPT-5.3-Codex supports reasoning effort levels: `low`, `medium`, `high`, `xhigh`. Adjustable via `/model` in the Codex CLI. The `xhigh` setting provides maximum reasoning depth for complex tasks. Default reasoning is automatically tuned by the model.
+
+### Gemini (Gemini 3.1 Pro)
+Gemini 3.1 Pro supports `thinking_level`: `low`, `medium` (new in 3.1), `high`. When set to `high`, 3.1 Pro behaves as a "mini Deep Think" model with significantly enhanced reasoning (77.1% on ARC-AGI-2, 2x over 3.0 Pro). Default is `high`.
 
 ## Requirements
 

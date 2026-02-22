@@ -844,7 +844,7 @@ select_opus_mode() {
 # - OpenAI GPT-5.3: gpt-5.3-codex (premium), gpt-5.3-codex-spark (fast), gpt-5.2-codex, gpt-5.1-codex-mini, gpt-5.2
 # - OpenAI Reasoning: o3, o4-mini
 # - OpenAI Large Context: gpt-4.1 (1M ctx), gpt-4.1-mini (1M ctx)
-# - Google Gemini 3.0: gemini-3-pro-preview, gemini-3-flash-preview, gemini-3-pro-image-preview
+# - Google Gemini 3.1: gemini-3.1-pro-preview (premium), gemini-3-pro-preview, gemini-3-flash-preview, gemini-3-pro-image-preview
 get_agent_command() {
     local agent_type="$1"
     local model=""
@@ -1016,8 +1016,9 @@ get_model_pricing() {
         # OpenAI Large Context models (v8.9.0: 1M context window)
         gpt-4.1)                echo "2.00:8.00" ;;
         gpt-4.1-mini)           echo "0.40:1.60" ;;
-        # Google Gemini 3.0 models
-        gemini-3-pro-preview)   echo "2.50:10.00" ;;
+        # Google Gemini 3.x models
+        gemini-3.1-pro-preview) echo "2.00:12.00" ;;   # v8.20: Gemini 3.1 Pro (1M ctx, medium thinking)
+        gemini-3-pro-preview)   echo "2.00:12.00" ;;   # Updated pricing (was $2.50/$10.00)
         gemini-3-flash-preview) echo "0.25:1.00" ;;
         gemini-3-pro-image-preview) echo "5.00:20.00" ;;
         # Claude models
@@ -1114,8 +1115,8 @@ get_tier_model() {
             case "$tier" in
                 budget)   echo "gemini-3-flash-preview" ;;
                 standard) echo "gemini-3-pro-preview" ;;
-                premium)  echo "gemini-3-pro-preview" ;;
-                *)        echo "gemini-3-pro-preview" ;;
+                premium)  echo "gemini-3.1-pro-preview" ;;
+                *)        echo "gemini-3.1-pro-preview" ;;
             esac
             ;;
         claude-opus*)
@@ -1389,11 +1390,11 @@ migrate_provider_config() {
                 fi
                 ;;
             # Expired Gemini preview models
-            gemini-2.0-flash-thinking*|gemini-2.0-flash-exp*|gemini-exp-*)
+            gemini-2.0-flash-thinking*|gemini-2.0-flash-exp*|gemini-exp-*|gemini-2.5-flash*|gemini-2.5-pro*)
                 replacement="gemini-3-flash-preview"
                 ;;
             gemini-2.0-pro*|gemini-1.5-pro*|gemini-pro)
-                replacement="gemini-3-pro-preview"
+                replacement="gemini-3.1-pro-preview"
                 ;;
             # Old GPT models for Codex
             gpt-4o*|gpt-4-turbo*|gpt-4-*|o1-*|chatgpt-*)
@@ -1488,7 +1489,7 @@ get_agent_model() {
         codex-spark)    echo "gpt-5.3-codex-spark" ;;       # v8.9.0: Ultra-fast (1000+ tok/s)
         codex-reasoning) echo "o3" ;;                        # v8.9.0: Deep reasoning
         codex-large-context) echo "gpt-4.1" ;;              # v8.9.0: 1M context window
-        gemini)         echo "gemini-3-pro-preview" ;;
+        gemini)         echo "gemini-3.1-pro-preview" ;;    # v8.20: Gemini 3.1 Pro default
         gemini-fast)    echo "gemini-3-flash-preview" ;;
         gemini-image)   echo "gemini-3-pro-image-preview" ;;
         codex-review)   echo "gpt-5.3-codex" ;;
@@ -1661,7 +1662,7 @@ set_provider_model() {
       "reasoning_model": "o3",
       "large_context_model": "gpt-4.1"
     },
-    "gemini": {"model": "gemini-3-pro-preview", "fallback": "gemini-3-flash-preview"}
+    "gemini": {"model": "gemini-3.1-pro-preview", "fallback": "gemini-3-pro-preview"}
   },
   "phase_routing": {
     "discover": "gpt-5.3-codex",
@@ -8203,7 +8204,7 @@ get_role_mapping() {
     local role="$1"
     case "$role" in
         architect)    echo "codex:gpt-5.3-codex" ;;            # System design, planning (v8.3: GPT-5.3-Codex)
-        researcher)   echo "gemini:gemini-3-pro-preview" ;;   # Deep investigation
+        researcher)   echo "gemini:gemini-3.1-pro-preview" ;;  # Deep investigation (v8.20: Gemini 3.1 Pro)
         reviewer)     echo "codex-review:gpt-5.3-codex" ;;    # Code review, validation (v8.3: GPT-5.3-Codex)
         implementer)  echo "codex:gpt-5.3-codex" ;;           # Code generation (v8.3: GPT-5.3-Codex)
         synthesizer)  echo "claude:claude-sonnet-4.6" ;;      # Result aggregation (v8.17: Sonnet 4.6)
@@ -11502,7 +11503,7 @@ _display_smoke_test_error() {
             if [[ "$provider" == "codex" ]]; then
                 echo -e "    ${DIM}Fix: export OCTOPUS_CODEX_MODEL=gpt-5.3-codex${NC}"
             else
-                echo -e "    ${DIM}Fix: export OCTOPUS_GEMINI_MODEL=gemini-3-pro-preview${NC}"
+                echo -e "    ${DIM}Fix: export OCTOPUS_GEMINI_MODEL=gemini-3.1-pro-preview${NC}"
             fi
             ;;
         AUTH_FAILURE)

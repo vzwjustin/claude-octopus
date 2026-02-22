@@ -42,11 +42,21 @@ Use Codex for:
 - Error debugging and resolution
 - API integration patterns
 
+### Models
+
+| Model | Context | Reasoning Effort | Cost |
+|-------|---------|------------------|------|
+| `gpt-5.3-codex` | 400K | low, medium, high, xhigh | $1.75/$14.00 per MTok |
+| `gpt-5.3-codex-spark` | 128K | - (1000+ tok/s) | Pro-only |
+| `gpt-5.2-codex` | 400K | low, medium, high, xhigh | $1.75/$14.00 per MTok |
+| `gpt-5.1-codex-mini` | 400K | - | $0.30/$1.25 per MTok |
+
 ### Cost Considerations
 
-- Codex uses GPT-5.3-Codex (high-capability model, $4.00/$16.00 per MTok input/output)
-- Estimated cost: ~$0.02-0.10 per query
-- Cost depends on input/output token count
+- Default model: `gpt-5.3-codex` ($1.75/$14.00 per MTok input/output)
+- Spark model: `gpt-5.3-codex-spark` (15x faster, Pro subscription required)
+- Estimated cost: ~$0.01-0.15 per query depending on model
+- Cost depends on input/output token count and reasoning effort
 - Uses your personal OPENAI_API_KEY (or OAuth via `codex auth`)
 
 ## Security
