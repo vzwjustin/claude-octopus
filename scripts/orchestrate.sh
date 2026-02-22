@@ -1006,7 +1006,7 @@ get_model_pricing() {
         gpt-5.3-codex-spark)    echo "1.75:14.00" ;;  # v8.9.0: Spark - same API price, Pro-only
         gpt-5.2-codex)          echo "1.75:14.00" ;;
         gpt-5.1-codex-max)      echo "1.25:10.00" ;;
-        gpt-5.1-codex-mini)     echo "0.30:1.25" ;;   # v8.9.0: Budget ~1 credit/msg
+        gpt-5.1-codex-mini)     echo "0.25:2.00" ;;   # v8.20: Corrected pricing ($0.25/$2.00 MTok)
         gpt-5.2)                echo "1.75:14.00" ;;
         gpt-5.1)                echo "1.25:10.00" ;;
         gpt-5-codex)            echo "1.25:10.00" ;;
@@ -1019,7 +1019,7 @@ get_model_pricing() {
         # Google Gemini 3.x models
         gemini-3.1-pro-preview) echo "2.00:12.00" ;;   # v8.20: Gemini 3.1 Pro (1M ctx, medium thinking)
         gemini-3-pro-preview)   echo "2.00:12.00" ;;   # Updated pricing (was $2.50/$10.00)
-        gemini-3-flash-preview) echo "0.25:1.00" ;;
+        gemini-3-flash-preview) echo "0.50:3.00" ;;    # v8.20: Corrected pricing ($0.50/$3.00 MTok)
         gemini-3-pro-image-preview) echo "5.00:20.00" ;;
         # Claude models
         claude-sonnet-4.5)      echo "3.00:15.00" ;;

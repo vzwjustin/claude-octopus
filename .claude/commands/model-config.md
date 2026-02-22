@@ -88,7 +88,7 @@ Models are selected using a 5-tier precedence system:
 
 | Model | Context | Best For | Cost |
 |-------|---------|----------|------|
-| `gpt-5.1-codex-mini` | 400K | Budget tasks, ~1 credit/msg | ~$0.30/$1.25 per MTok |
+| `gpt-5.1-codex-mini` | 400K | Budget tasks, ~1 credit/msg | $0.25/$2.00 per MTok |
 | `gpt-5.1-codex-max` | 400K | Long-horizon agentic tasks | $1.25/$10.00 per MTok |
 | `gpt-5-codex` | 400K | Legacy support | $1.25/$10.00 per MTok |
 
@@ -120,9 +120,9 @@ Requires `OPENROUTER_API_KEY` to be set. These are automatically selected when O
 
 | Model | Context | Best For | Cost |
 |-------|---------|----------|------|
-| `gemini-3.1-pro-preview` | **1M** | Premium reasoning, agentic tasks (thinking: low/medium/high) | $2.00/$12.00 per MTok |
-| `gemini-3-pro-preview` | **1M** | Standard quality research | $2.00/$12.00 per MTok |
-| `gemini-3-flash-preview` | 1M | Fast, low-cost tasks | $0.25/$1.00 per MTok |
+| `gemini-3.1-pro-preview` | **1M** | Premium reasoning, agentic tasks (thinking: minimal/low/medium/high) | $2.00/$12.00 per MTok |
+| `gemini-3-pro-preview` | **1M** | Standard quality research (thinking: low/high) | $2.00/$12.00 per MTok |
+| `gemini-3-flash-preview` | **1M** | Fast tasks (thinking: minimal/low/medium/high) | $0.50/$3.00 per MTok |
 
 ## Phase Routing
 
@@ -259,8 +259,8 @@ Location: `~/.claude-octopus/config/providers.json`
 ### Codex (GPT-5.3-Codex)
 GPT-5.3-Codex supports reasoning effort levels: `low`, `medium`, `high`, `xhigh`. Adjustable via `/model` in the Codex CLI. The `xhigh` setting provides maximum reasoning depth for complex tasks. Default reasoning is automatically tuned by the model.
 
-### Gemini (Gemini 3.1 Pro)
-Gemini 3.1 Pro supports `thinking_level`: `low`, `medium` (new in 3.1), `high`. When set to `high`, 3.1 Pro behaves as a "mini Deep Think" model with significantly enhanced reasoning (77.1% on ARC-AGI-2, 2x over 3.0 Pro). Default is `high`.
+### Gemini (Gemini 3.x)
+Gemini 3.1 Pro supports `thinking_level`: `minimal`, `low`, `medium` (new in 3.1), `high`. When set to `high`, 3.1 Pro behaves as a "mini Deep Think" model with significantly enhanced reasoning (77.1% on ARC-AGI-2, 2x over 3.0 Pro). Default is `high`. Gemini 3 Flash also supports all four thinking levels (minimal/low/medium/high).
 
 ## Requirements
 

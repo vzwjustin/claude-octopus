@@ -49,7 +49,7 @@ Use Codex for:
 | `gpt-5.3-codex` | 400K | low, medium, high, xhigh | $1.75/$14.00 per MTok |
 | `gpt-5.3-codex-spark` | 128K | - (1000+ tok/s) | Pro-only |
 | `gpt-5.2-codex` | 400K | low, medium, high, xhigh | $1.75/$14.00 per MTok |
-| `gpt-5.1-codex-mini` | 400K | - | $0.30/$1.25 per MTok |
+| `gpt-5.1-codex-mini` | 400K | - | $0.25/$2.00 per MTok |
 
 ### Cost Considerations
 

@@ -46,9 +46,9 @@ Use Gemini for:
 
 | Model | Context | Thinking Levels | Cost |
 |-------|---------|-----------------|------|
-| `gemini-3.1-pro-preview` | 1M | low, medium, high | $2.00/$12.00 per MTok |
+| `gemini-3.1-pro-preview` | 1M | minimal, low, medium, high | $2.00/$12.00 per MTok |
 | `gemini-3-pro-preview` | 1M | low, high | $2.00/$12.00 per MTok |
-| `gemini-3-flash-preview` | 1M | - | $0.25/$1.00 per MTok |
+| `gemini-3-flash-preview` | 1M | minimal, low, medium, high | $0.50/$3.00 per MTok |
 
 ### Cost Considerations
 
