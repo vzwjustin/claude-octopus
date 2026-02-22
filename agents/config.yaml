@@ -4,9 +4,9 @@
 # CLI Options: codex (gpt-5.3-codex), codex-max, codex-mini, codex-spark, codex-reasoning,
 #              codex-large-context, codex-review, gemini, gemini-fast, claude-opus
 # Models (v8.20): gpt-5.3-codex (flagship), gpt-5.3-codex-spark (ultra-fast),
-#                 gpt-5.2-codex, gpt-5.1-codex-mini (budget), o3 (reasoning),
-#                 gpt-4.1 (1M context), gpt-4.1-mini (1M context, budget)
+#                 gpt-5.2-codex (standard), gpt-5.1-codex-mini (budget),
 #                 gemini-3.1-pro-preview (premium), gemini-3-flash-preview (fast)
+# Note: o3, o4-mini, gpt-4.1, gpt-4.1-mini retired from Codex CLI (Feb 2026)
 # Phases: probe (discover), grasp (define), tangle (develop), ink (deliver)
 # Tiers: trivial, standard, premium
 # permissionMode: plan (read-only), acceptEdits (can write), default (standard)
@@ -319,8 +319,8 @@ agents:
   # ═══════════════════════════════════════════════════════════════════════════
   codebase-analyst:
     file: personas/code-reviewer.md       # Reuses code-reviewer persona
-    cli: codex-large-context              # v8.9.0: gpt-4.1 with 1M context window
-    model: gpt-4.1
+    cli: codex-large-context              # v8.20: gpt-5.2-codex 400K (gpt-4.1 retired)
+    model: gpt-5.2-codex
     fallback_cli: codex
     phases: [probe, ink]
     tier: premium
@@ -330,8 +330,8 @@ agents:
 
   reasoning-analyst:
     file: personas/strategy-analyst.md    # Reuses strategy-analyst persona
-    cli: codex-reasoning                  # v8.9.0: o3 deep reasoning model
-    model: o3
+    cli: codex-reasoning                  # v8.20: gpt-5.3-codex xhigh (o3 retired)
+    model: gpt-5.3-codex
     fallback_cli: codex
     phases: [probe, grasp]
     tier: premium

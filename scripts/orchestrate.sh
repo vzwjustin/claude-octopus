@@ -842,8 +842,8 @@ select_opus_mode() {
 # Agent configurations
 # Models (Feb 2026) - Premium defaults for Design Thinking workflows:
 # - OpenAI GPT-5.3: gpt-5.3-codex (premium), gpt-5.3-codex-spark (fast), gpt-5.2-codex, gpt-5.1-codex-mini, gpt-5.2
-# - OpenAI Reasoning: o3, o4-mini
-# - OpenAI Large Context: gpt-4.1 (1M ctx), gpt-4.1-mini (1M ctx)
+# - OpenAI Reasoning: gpt-5.3-codex with xhigh effort (o3/o4-mini retired from Codex CLI)
+# - OpenAI Large Context: gpt-5.2-codex 400K (gpt-4.1/gpt-4.1-mini retired from Codex CLI)
 # - Google Gemini 3.1: gemini-3.1-pro-preview (premium), gemini-3-pro-preview, gemini-3-flash-preview, gemini-3-pro-image-preview
 get_agent_command() {
     local agent_type="$1"
@@ -870,11 +870,11 @@ get_agent_command() {
             model=$(get_agent_model "$agent_type")
             echo "codex exec --model ${model} ${sandbox_flag}"
             ;;
-        codex-reasoning)  # v8.9.0: Reasoning models (o3, o4-mini)
+        codex-reasoning)  # v8.20: Reasoning via gpt-5.3-codex xhigh (o3/o4-mini retired)
             model=$(get_agent_model "$agent_type")
             echo "codex exec --model ${model} ${sandbox_flag}"
             ;;
-        codex-large-context)  # v8.9.0: 1M context models (gpt-4.1)
+        codex-large-context)  # v8.20: Large context via gpt-5.2-codex 400K (gpt-4.1 retired)
             model=$(get_agent_model "$agent_type")
             echo "codex exec --model ${model} ${sandbox_flag}"
             ;;
@@ -927,11 +927,11 @@ get_agent_command_array() {
             model=$(get_agent_model "$agent_type")
             _cmd_array=(codex exec --model "$model" --sandbox "$codex_sandbox")
             ;;
-        codex-reasoning)  # v8.9.0: Reasoning models (o3, o4-mini)
+        codex-reasoning)  # v8.20: Reasoning via gpt-5.3-codex xhigh (o3/o4-mini retired)
             model=$(get_agent_model "$agent_type")
             _cmd_array=(codex exec --model "$model" --sandbox "$codex_sandbox")
             ;;
-        codex-large-context)  # v8.9.0: 1M context models (gpt-4.1)
+        codex-large-context)  # v8.20: Large context via gpt-5.2-codex 400K (gpt-4.1 retired)
             model=$(get_agent_model "$agent_type")
             _cmd_array=(codex exec --model "$model" --sandbox "$codex_sandbox")
             ;;
@@ -1010,12 +1010,12 @@ get_model_pricing() {
         gpt-5.2)                echo "1.75:14.00" ;;
         gpt-5.1)                echo "1.25:10.00" ;;
         gpt-5-codex)            echo "1.25:10.00" ;;
-        # OpenAI Reasoning models (v8.9.0)
-        o3)                     echo "2.00:8.00" ;;
-        o4-mini)                echo "1.10:4.40" ;;
-        # OpenAI Large Context models (v8.9.0: 1M context window)
-        gpt-4.1)                echo "2.00:8.00" ;;
-        gpt-4.1-mini)           echo "0.40:1.60" ;;
+        # OpenAI Reasoning/Large Context models (retired from Codex CLI Feb 2026)
+        # Kept for cost tracking of any remaining API usage
+        o3)                     echo "2.00:8.00" ;;    # Retired: use gpt-5.3-codex xhigh
+        o4-mini)                echo "1.10:4.40" ;;    # Retired Feb 16 2026 (API 404)
+        gpt-4.1)                echo "2.00:8.00" ;;    # Retired: use gpt-5.2-codex
+        gpt-4.1-mini)           echo "0.40:1.60" ;;    # Retired: use gpt-5.1-codex-mini
         # Google Gemini 3.x models
         gemini-3.1-pro-preview) echo "2.00:12.00" ;;   # v8.20: Gemini 3.1 Pro (1M ctx, medium thinking)
         gemini-3-pro-preview)   echo "2.00:12.00" ;;   # Updated pricing (was $2.50/$10.00)
@@ -1087,20 +1087,20 @@ get_tier_model() {
         codex-spark)  # v8.9.0: Spark always uses spark model
             echo "gpt-5.3-codex-spark"
             ;;
-        codex-reasoning)  # v8.9.0: Reasoning tier
+        codex-reasoning)  # v8.20: Reasoning tier (o3/o4-mini retired, use GPT-5.x with reasoning effort)
             case "$tier" in
-                budget)   echo "o4-mini" ;;
-                standard) echo "o4-mini" ;;
-                premium)  echo "o3" ;;
-                *)        echo "o4-mini" ;;
+                budget)   echo "gpt-5.1-codex-mini" ;;
+                standard) echo "gpt-5.2-codex" ;;
+                premium)  echo "gpt-5.3-codex" ;;
+                *)        echo "gpt-5.2-codex" ;;
             esac
             ;;
-        codex-large-context)  # v8.9.0: Large context tier (1M tokens)
+        codex-large-context)  # v8.20: Large context tier (gpt-4.1 retired, GPT-5.x 400K max)
             case "$tier" in
-                budget)   echo "gpt-4.1-mini" ;;
-                standard) echo "gpt-4.1" ;;
-                premium)  echo "gpt-4.1" ;;
-                *)        echo "gpt-4.1" ;;
+                budget)   echo "gpt-5.1-codex-mini" ;;
+                standard) echo "gpt-5.2-codex" ;;
+                premium)  echo "gpt-5.3-codex" ;;
+                *)        echo "gpt-5.2-codex" ;;
             esac
             ;;
         codex*)
@@ -1397,7 +1397,11 @@ migrate_provider_config() {
                 replacement="gemini-3.1-pro-preview"
                 ;;
             # Old GPT models for Codex
-            gpt-4o*|gpt-4-turbo*|gpt-4-*|o1-*|chatgpt-*)
+            gpt-4o*|gpt-4-turbo*|gpt-4-*|gpt-4.1*|o1-*|chatgpt-*)
+                replacement="gpt-5.3-codex"
+                ;;
+            # Retired reasoning/context models (Feb 2026)
+            o3|o3-mini|o4-mini)
                 replacement="gpt-5.3-codex"
                 ;;
         esac
@@ -1487,8 +1491,8 @@ get_agent_model() {
         codex-mini)     echo "gpt-5.1-codex-mini" ;;
         codex-general)  echo "gpt-5.2" ;;
         codex-spark)    echo "gpt-5.3-codex-spark" ;;       # v8.9.0: Ultra-fast (1000+ tok/s)
-        codex-reasoning) echo "o3" ;;                        # v8.9.0: Deep reasoning
-        codex-large-context) echo "gpt-4.1" ;;              # v8.9.0: 1M context window
+        codex-reasoning) echo "gpt-5.3-codex" ;;               # v8.20: Deep reasoning (xhigh effort)
+        codex-large-context) echo "gpt-5.2-codex" ;;        # v8.20: Large context (400K, gpt-4.1 retired)
         gemini)         echo "gemini-3.1-pro-preview" ;;    # v8.20: Gemini 3.1 Pro default
         gemini-fast)    echo "gemini-3-flash-preview" ;;
         gemini-image)   echo "gemini-3-pro-image-preview" ;;
@@ -1539,11 +1543,11 @@ select_codex_model_for_context() {
             return 0
             ;;
         large-codebase|large-context)
-            echo "gpt-4.1"
+            echo "gpt-5.2-codex"
             return 0
             ;;
         reasoning)
-            echo "o3"
+            echo "gpt-5.3-codex"
             return 0
             ;;
         budget|cheap)
@@ -1659,8 +1663,8 @@ set_provider_model() {
       "fallback": "gpt-5.2-codex",
       "spark_model": "gpt-5.3-codex-spark",
       "mini_model": "gpt-5.1-codex-mini",
-      "reasoning_model": "o3",
-      "large_context_model": "gpt-4.1"
+      "reasoning_model": "gpt-5.3-codex",
+      "large_context_model": "gpt-5.2-codex"
     },
     "gemini": {"model": "gemini-3.1-pro-preview", "fallback": "gemini-3-pro-preview"}
   },

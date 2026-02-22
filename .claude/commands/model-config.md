@@ -13,8 +13,7 @@ updated: 2026-02-22
 Configure which AI models are used by Claude Octopus workflows. This allows you to:
 - Use premium models (GPT-5.3-Codex, Claude Opus 4.6) for complex tasks
 - Use fast models (GPT-5.3-Codex-Spark, Gemini Flash) for quick feedback
-- Use large-context models (GPT-4.1, 1M tokens) for big codebases
-- Use reasoning models (o3, o4-mini) for complex analysis
+- Use reasoning mode (GPT-5.3-Codex xhigh) for complex analysis
 - Configure per-phase model routing (different models for different workflow phases)
 - Control cost/performance tradeoffs per project
 
@@ -57,8 +56,8 @@ Models are selected using a 5-tier precedence system:
 2. **Task hints** (contextual override from calling code)
    - `fast` / `spark` → GPT-5.3-Codex-Spark
    - `deep` / `security` → GPT-5.3-Codex
-   - `large-codebase` → GPT-4.1
-   - `reasoning` → o3
+   - `large-codebase` → GPT-5.2-Codex (400K)
+   - `reasoning` → GPT-5.3-Codex (xhigh effort)
    - `budget` → GPT-5.1-Codex-Mini
 
 3. **Phase routing config** (per-phase model selection)
@@ -70,8 +69,8 @@ Models are selected using a 5-tier precedence system:
 5. **Hard-coded defaults** (lowest priority)
    - Codex: `gpt-5.3-codex`
    - Spark: `gpt-5.3-codex-spark`
-   - Reasoning: `o3`
-   - Large context: `gpt-4.1`
+   - Reasoning: `gpt-5.3-codex` (xhigh effort)
+   - Large context: `gpt-5.2-codex` (400K)
    - Gemini: `gemini-3.1-pro-preview`
 
 ## Supported Models
@@ -92,19 +91,14 @@ Models are selected using a 5-tier precedence system:
 | `gpt-5.1-codex-max` | 400K | Long-horizon agentic tasks | $1.25/$10.00 per MTok |
 | `gpt-5-codex` | 400K | Legacy support | $1.25/$10.00 per MTok |
 
-### Reasoning Models (via Codex CLI)
+### Retired Models (no longer in Codex CLI as of Feb 2026)
 
-| Model | Context | Best For | Cost |
-|-------|---------|----------|------|
-| `o3` | 200K | Deep reasoning, trade-off analysis | $2.00/$8.00 per MTok |
-| `o4-mini` | 200K | Cost-effective reasoning | $1.10/$4.40 per MTok |
-
-### Large Context Models (via Codex CLI)
-
-| Model | Context | Best For | Cost |
-|-------|---------|----------|------|
-| `gpt-4.1` | **1M** | Large codebase analysis, dependency mapping | $2.00/$8.00 per MTok |
-| `gpt-4.1-mini` | **1M** | Budget large-context tasks | $0.40/$1.60 per MTok |
+| Model | Status | Replacement |
+|-------|--------|-------------|
+| `o3` | Succeeded by GPT-5.1 | `gpt-5.3-codex` with xhigh reasoning effort |
+| `o4-mini` | API retired Feb 16 | `gpt-5.1-codex-mini` |
+| `gpt-4.1` | Retired from ChatGPT | `gpt-5.2-codex` (400K context) |
+| `gpt-4.1-mini` | Retired from ChatGPT | `gpt-5.1-codex-mini` |
 
 ### OpenRouter Models (v8.11.0)
 
@@ -169,8 +163,8 @@ export OCTOPUS_CODEX_MODEL="gpt-5.3-codex-spark"
 
 ### Large Codebase Analysis
 ```bash
-# Use 1M context model for analyzing large repos
-/octo:model-config codex gpt-4.1 --session
+# Use GPT-5.2-Codex (400K context) for analyzing large repos
+/octo:model-config codex gpt-5.2-codex --session
 /octo:discover "analyze the entire authentication subsystem"
 ```
 
@@ -192,8 +186,8 @@ export OCTOPUS_CODEX_MODEL="gpt-5.3-codex-spark"
 
 ### Deep Security Audit
 ```bash
-# Use premium models + reasoning for security
-/octo:model-config phase security o3
+# Use premium model with max reasoning for security
+/octo:model-config phase security gpt-5.3-codex
 /octo:security audit the payment processing module
 ```
 
@@ -218,8 +212,8 @@ Location: `~/.claude-octopus/config/providers.json`
       "fallback": "gpt-5.2-codex",
       "spark_model": "gpt-5.3-codex-spark",
       "mini_model": "gpt-5.1-codex-mini",
-      "reasoning_model": "o3",
-      "large_context_model": "gpt-4.1"
+      "reasoning_model": "gpt-5.3-codex",
+      "large_context_model": "gpt-5.2-codex"
     },
     "gemini": {
       "model": "gemini-3.1-pro-preview",
